@@ -46,11 +46,11 @@ def extreme_outliers_limits(column):
     return outliers_limits
 
 #MOSTRAR HISTOGRAMA PARA UNA COLUMNA DADA
-def mostrar_histograma(column, bins=100, label = None):
-    print('Histograma:')
+def mostrar_histograma(column, bins=50, titulo='', etiqueta=None):
+    print('Histograma', titulo, ':')
     fig, ax = plt.subplots()
     ax.hist(column, bins)
-    ax.set_xlabel(label)
+    ax.set_xlabel(etiqueta)
     plt.show()
 
 #ELIMINA VALORES ATIPICOS
@@ -68,8 +68,8 @@ def delete_extreme_outliers(data, column):
     return data_without_extreme_outliers
     
 #MUESTRA DIAGRAMA DE CAJAS
-def mostrar_diagrama_cajas(column):
-    print('Diagrama de cajas:')
+def mostrar_diagrama_cajas(column, titulo=''):
+    print('Diagrama de cajas', titulo, ':')
     plt.boxplot(column, vert=False)
     plt.show()
 
@@ -98,7 +98,7 @@ def mostrar_matriz_correlacion_variables_fuertes(data, variables = 20):
     print('Matriz de correlaciones de las ', variables, ' variables mas fuertes:')
     correlation=data.corr()
     aux=abs(correlation['Poder_Adquisitivo']).sort_values(ascending=False) #sort variables by their correlation with SalePrice
-    selected_feats=aux[0:variables].index
+    selected_feats=aux[1:variables+1].index
     sns.set()
     fig, ax = plt.subplots(figsize=(16,8))
     sns.heatmap(correlation.loc[selected_feats,selected_feats], annot=True,fmt='.2f',ax=ax)
@@ -137,8 +137,8 @@ def mostrar_matriz_dispersion_variables_fuertes(data, variables = 20):
 def mostrar_histograma_bloque(bloque = 'Imp_Cons'):
     for col in numeric_cols:
         if(col.find(bloque) != -1):
-           print(col)
-           mostrar_histograma(traindata_without_outliers[col], 50)
+           #print(col)
+           mostrar_histograma(traindata_without_outliers[col], 50, titulo=col, etiqueta=col)
 
 #TRANSFORMACION LOGARITMICA
 def transformacion_logaritmica(column):
@@ -154,7 +154,6 @@ def transformacion_exponencial(column):
 def crear_variable_relacion(column_a, column_b):
     new_column = [a / b for a,b in zip(column_a,column_b)]
     return new_column
-    
 
 
 
