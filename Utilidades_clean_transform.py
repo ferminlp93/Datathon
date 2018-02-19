@@ -216,13 +216,10 @@ def prep_dist_datasets(traindata,testdata):
     
     Test_data_Con_totales_y_cuadrados = testdata.drop(['Imp_Cons_total_3','Imp_Sal_total_3','Ind_Prod_total_3','Num_Oper_total_3','Relacion_3'],axis=1)
     
-    Train_sin_out,_=delete_outliers(traindata,traindata['Poder_Adquisitivo'],extreme=False)
-    
-    Train_sin_out_ext,_=delete_outliers(traindata,traindata['Poder_Adquisitivo'])
+   
     
     return traindata_Sin_totales,Test_data_Sin_totales,traindata_Con_totales,\
-    Test_data_Con_totales,traindata_Con_totales_y_cuadrados,Test_data_Con_totales_y_cuadrados,\
-    Train_sin_out,Train_sin_out_ext
+    Test_data_Con_totales,traindata_Con_totales_y_cuadrados,Test_data_Con_totales_y_cuadrados
 
 
 def create_folders():
@@ -236,16 +233,11 @@ def create_folders():
         os.makedirs('Con_Totales')
     if not os.path.exists('Con_Totales_y_Cuadrados'):
         os.makedirs('Con_Totales_y_Cuadrados')
-    if not os.path.exists('Total_Sin_Outlayers'):
-        os.makedirs('Total_Sin_Outlayers')
-    if not os.path.exists('Total_Sin_Outlayers_Extremos'):
-        os.makedirs('Total_Sin_Outlayers_Extremos')
     if not os.path.exists('Total_Visualizacion'):
         os.makedirs('Total_Visualizacion')
 
 def save_datasets(traindata,testdata,traindata_Sin_totales,Test_data_Sin_totales,traindata_Con_totales,\
-                 Test_data_Con_totales,traindata_Con_totales_y_cuadrados,Test_data_Con_totales_y_cuadrados,\
-                 Train_sin_out,Train_sin_out_ext,Train_visu,Test_visu):
+                 Test_data_Con_totales,traindata_Con_totales_y_cuadrados,Test_data_Con_totales_y_cuadrados,Train_visu,Test_visu):
     #Procedemos a guardar los datasets
     print('saving files...')    
     print('Total')
@@ -255,14 +247,6 @@ def save_datasets(traindata,testdata,traindata_Sin_totales,Test_data_Sin_totales
     print('Dataset de Visualizacion')
     Train_visu.to_csv('./Total_Visualizacion/traindata.csv', sep=',', encoding='utf-8',index=False)
     Test_visu.to_csv('./Total_Visualizacion/TEST.csv', sep=',', encoding='utf-8',index=False)
-    
-    print('Total sin outlayers')
-    Train_sin_out.to_csv('./Total_Sin_Outlayers/traindata.csv', sep=',', encoding='utf-8',index=False)
-    testdata.to_csv('./Total_Sin_Outlayers/TEST.csv', sep=',', encoding='utf-8',index=False)
-    
-    print('Total sin outlayers extremos')
-    Train_sin_out_ext.to_csv('./Total_Sin_Outlayers_Extremos/traindata.csv', sep=',', encoding='utf-8',index=False)
-    testdata.to_csv('./Total_Sin_Outlayers_Extremos/TEST.csv', sep=',', encoding='utf-8',index=False)
     
     print('Sin_Totales')
     traindata_Sin_totales.to_csv('./Sin_Totales/traindata.csv', sep=',', encoding='utf-8',index=False)
