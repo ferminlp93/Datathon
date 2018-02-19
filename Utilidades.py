@@ -12,6 +12,12 @@ import warnings
 |---------------------|
 """
 
+#RANGO INTERCUARTILICO
+def iqr_calculate(column):
+    description = column.describe()
+    iqr = description['75%']-description['25%']
+    return iqr
+
 #CONVIERTE DATAFRAMES A MATRICES NUMPY
 def to_matrix(X):
     X_matrix=X
