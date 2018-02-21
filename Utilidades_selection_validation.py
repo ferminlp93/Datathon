@@ -151,6 +151,7 @@ class Stacking_model(BaseEstimator, RegressorMixin):
         out_of_fold_predictions = np.zeros((X.shape[0], len(self.base_models)))
         for i, model in enumerate(self.base_models):
             for train_index, holdout_index in kfold.split(X_matrix, y_matrix):
+                print('fitting',get_model_name(model))
                 instance = clone(model)
                 self.base_models_[i].append(instance)
                 out_of_fold_predictions[holdout_index, i] = fit_predict(instance,X_matrix[train_index],y_matrix[train_index],X_matrix[holdout_index])
@@ -161,10 +162,11 @@ class Stacking_model(BaseEstimator, RegressorMixin):
    
     def predict(self, X_test):
         df_test=pd.DataFrame()
+        X_matrix = to_matrix(X_test)
         for i, base_models in enumerate(self.base_models_):
             df_test[i]=np.zeros(X_test.shape[0])
             for model in base_models:
-                df_test[i]+=model.predict(X_test)
+                df_test[i]+=model.predict(X_matrix)
                 
             df_test[i]/=len(base_models)
         
