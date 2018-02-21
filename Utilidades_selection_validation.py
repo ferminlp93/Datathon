@@ -43,12 +43,15 @@ def remove_outlier_predictions(y_pred,y_train):
     return result
 
 
+#METRICA MEAN ABSOLUTE ERROR APLICANDO PREVIAMENTE EXPONENCIAL SOBRE EL OBJETIVO
+#PARA CONTRARRESTAR LA TRANSFORMACION DEL LOGARITMO
 def log_scoring(y,y_pred):
     return mean_absolute_error(np.power(10,y),np.power(10,y_pred))
     
 
 
 #CALCULA LA PUNTUACION DE UN MODELO ELIMINANDO LOS OUTLIERS EXTREMOS
+#FUNCION INTERNA SOLO UTILIZADA EN PARALELO DENTRO DE CROSS VALIDATION
 def validate(model,X,y,scoring,verbose,indexes):
     train_index,test_index=indexes
     X_matrix = to_matrix(X)
@@ -84,7 +87,7 @@ def error_cv(model,X, y, verbose=0, metric=log_scoring, cv=4):
     return abs(result).mean()
 
 #CONVIERTE A ENTEROS LOS PARAMETROS QUE DEBEN SERLO
-#SE UTILIZA PARA PREVENIR AL MODELO DE POSIBLES CONFIGURACIONES DE PARAMETROS ERRONEAS
+#SE UTILIZA PARA PREVENIR AL MODELO DE POSIBLES CONFIGURACIONES DE PARAMETROS ERRONEAS GENERADAS POR EL OPTIMIZADOR
 def cast_to_int(params):
     result={}
     for key in set(['n_estimators','min_samples_split','max_depth','max_bin','num_leaves','min_data_in_leaf']).intersection(set(params.keys())):
@@ -94,6 +97,7 @@ def cast_to_int(params):
 #SE UTILIZA COMO FUNCION DE EVALUACION A MAXIMIZAR PARA EL PROCESO DE OPTIMIZACION BAYESSIANA
 def model_evaluate(model,X,y,cv,metric,**params):
     return -error_cv(model(**cast_to_int(params)),X,y,metric=metric,cv=cv)
+
 
 #CREA Y EJECUTA EL PROCESO DE OPTIMIZACION BAYESSIANA CON EL OBJETIVO DE ENCONTRAR LOS PARAMETROS OPTIMOS DE UN MODELO
 def error_cv_param_grid(model,X, y,param_grid, verbose=0, metric=log_scoring, cv=4):
@@ -130,7 +134,8 @@ def compare_models(models_table, X, y, estimate_params=False, verbose=0, metric=
         models_table['params']=params
         
         
-#CLASE QUE DEFINE UN REGRESOR POR STACKING         
+#CLASE QUE DEFINE UN REGRESOR POR STACKING IMPLEMENTACION QUE FUNCIONA
+#TODAVIA EN PRUEBAS
 class Stacking_model(BaseEstimator, RegressorMixin):
     def __init__(self, base_models, meta_model, n_folds=4, metric=mean_absolute_error):
         self.base_models = base_models
